@@ -6,4 +6,4 @@ sessionRouters.post('/signup', postSignUp)
 sessionRouters.post('/signin', postSignIn)
 sessionRouters.post('/urls/shorten', postShortenURLs)
 
-export default userRoutes
+export default sessionRouters
