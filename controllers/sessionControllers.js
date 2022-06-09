@@ -1,5 +1,8 @@
 import { query } from 'express';
 import connection from '../db.js'
+import jwt from 'jsonwebtoken'
+import dotenv from "dotenv";
+dotenv.config()
 
 export async function postSignUp(req, res) {
   const { name, email, password, confirmPassword
@@ -18,7 +21,9 @@ export async function postSignUp(req, res) {
 };
 
 export async function postSignIn(req, res) {
-
+  const user = req.body.email;
+  const accessToken = jwt.sign(user, "" + process.env.ACCESS_TOKEN_SECRET)
+  return res.json({ accessToken: accessToken })
 };
 
 export async function postShortenURLs(req, res) {
