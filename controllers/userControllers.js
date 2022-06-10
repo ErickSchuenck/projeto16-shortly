@@ -3,16 +3,21 @@ import connection from '../db.js'
 
 export async function getUsers(req, res) {
   const { id } = req.params;
-  try {
-    await connection.query(
-      `
-      SELECT id, 
-      name,
-      FROM users
-      `, [id])
+  const { user } = res.locals;
 
-  } catch (error) {
-    res.send(error)
+  try {
+    const query = await connection.query(`
+            SELECT urls.id, urls."shortUrl", urls.url, urls.visits
+            FROM urls
+            WHERE urls."userId"=$1;
+        `, [id]);
+    const { rows } = query;
+    const data = { ...user, shortenedUrls: rows };
+    res.status(200).send(data);
+  }
+
+  catch (error) {
+    res.send(error);
   }
 };
 
