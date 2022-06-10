@@ -2,17 +2,20 @@ import { query } from 'express';
 import connection from '../db.js'
 import jwt from 'jsonwebtoken'
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import chalk from 'chalk';
 dotenv.config()
 
 export async function postSignUp(req, res) {
-  const { name, email, password, confirmPassword
+  const { name, email, password
   } = req.body;
-  console.log(name, email, password)
+  let hashedPassword = bcrypt.hashSync(password, 10)
+
   try {
     await connection.query(
       `
       INSERT INTO users (name, email, password) VALUES ($1, $2, $3)
-      `, [name, email, password]
+      `, [name, email, hashedPassword]
     )
     res.sendStatus(201)
   } catch (error) {

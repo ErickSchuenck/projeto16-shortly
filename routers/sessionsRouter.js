@@ -5,7 +5,7 @@ import { signUpMiddleware, signInMiddleware } from '../middlewares/sessionMiddle
 const sessionRouters = express.Router()
 
 sessionRouters.post('/signup', signUpMiddleware, postSignUp)
-sessionRouters.post('/signin', postSignIn)
+sessionRouters.post('/signin', signInMiddleware, postSignIn)
 sessionRouters.post('/urls/shorten', postShortenURLs)
 
 export default sessionRouters
