@@ -9,14 +9,14 @@ const signupSchema = joi.object({
   confirmPassword: joi.ref('password')
 });
 
-const signinSchema = joi.object({
+const signInSchema = joi.object({
   email: joi.string().min(3).required().email(),
   password: joi.string().required()
 });
 
 export async function signUpMiddleware(req, res, next) {
 
-  const validation = signInSchema.validate(req.body, { abortEarly: false });
+  const validation = signupSchema.validate(req.body, { abortEarly: false });
   if (validation.error) {
     console.log('Password and confirm password mismatch')
     const errorArr = validation.error.details;
@@ -43,7 +43,7 @@ export async function signUpMiddleware(req, res, next) {
 };
 
 export async function signInMiddleware(req, res, next) {
-  const validation = signinSchema.validate(req.body)
+  const validation = signInSchema.validate(req.body)
   const { email, password } = req.body;
   if (validation.error) {
     console.log('Ops! Something looks wrong here...')
@@ -55,12 +55,15 @@ export async function signInMiddleware(req, res, next) {
       WHERE email = $1;
     `, [email]
     );
+
+
     const dataVerification = bcrypt.compareSync(password, result.rows[0].password)
 
     if (!dataVerification) {
       return res.sendStatus(401);
     }
     if (dataVerification) {
+      res.locals.user = result.rows[0]
       next()
     }
   }

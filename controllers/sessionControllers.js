@@ -23,23 +23,23 @@ export async function postSignUp(req, res) {
 };
 
 export async function postSignIn(req, res) {
-  const user = req.body.email;
-  const accessToken = jwt.sign(user, "" + process.env.ACCESS_TOKEN_SECRET)
+  const { id } = res.locals.user;
+  const accessToken = jwt.sign(id, "" + process.env.ACCESS_TOKEN_SECRET)
   return res.json({ accessToken: accessToken })
 };
 
 export async function postShortenURLs(req, res) {
-  // const userId = res.locals.userId;
-  // const { url } = req.body;
-  // const shortUrl = nanoid(8);
-  // try {
-  //   await connectionSQL.query(`
-  //           INSERT INTO urls
-  //           (url, "shortUrl", "userId")
-  //           VALUES ($1, $2, $3) 
-  //       `, [url, shortUrl, userId]);
-  //   res.status(201).send(shortUrl);
-  // } catch (error) {
-  //   res.send(error)
-  // }
+  const userId = res.locals.userId;
+  const { url } = req.body;
+  const shortUrl = nanoid(8);
+  try {
+    await connectionSQL.query(`
+            INSERT INTO urls
+            (url, "shortUrl", "userId")
+            VALUES ($1, $2, $3) 
+        `, [url, shortUrl, userId]);
+    res.status(201).send(shortUrl);
+  } catch (error) {
+    res.send(error)
+  }
 };

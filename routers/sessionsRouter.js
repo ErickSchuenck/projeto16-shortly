@@ -1,7 +1,7 @@
 import express from 'express'
 import { postSignUp, postSignIn, postShortenURLs } from '../controllers/sessionControllers.js'
 import { signUpMiddleware, signInMiddleware } from '../middlewares/sessionMiddleware.js'
-import { autenticateToken } from '../middlewares/tokenAuthentication.js'
+import { autenticateToken } from '../middlewares/tokenAuthenticationMiddleware.js'
 
 const sessionRouters = express.Router()
 
