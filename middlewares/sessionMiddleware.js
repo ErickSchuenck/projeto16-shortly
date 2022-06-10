@@ -15,12 +15,14 @@ const signinSchema = joi.object({
 });
 
 export async function signUpMiddleware(req, res, next) {
-  const validation = signupSchema.validate(req.body)
 
+  const validation = signInSchema.validate(req.body, { abortEarly: false });
   if (validation.error) {
     console.log('Password and confirm password mismatch')
-    return res.sendStatus(422);
-  }
+    const errorArr = validation.error.details;
+    return res.status(422).send(errorArr.map((e) => { return e.message }));
+  };
+
 
   try {
     const result = await connection.query(`
