@@ -27,19 +27,3 @@ export async function postSignIn(req, res) {
   const accessToken = jwt.sign(id, "" + process.env.ACCESS_TOKEN_SECRET)
   return res.json({ accessToken: accessToken })
 };
-
-export async function postShortenURLs(req, res) {
-  const userId = res.locals.userId;
-  const { url } = req.body;
-  const shortUrl = nanoid(8);
-  try {
-    await connectionSQL.query(`
-            INSERT INTO urls
-            (url, "shortUrl", "userId")
-            VALUES ($1, $2, $3) 
-        `, [url, shortUrl, userId]);
-    res.status(201).send(shortUrl);
-  } catch (error) {
-    res.send(error)
-  }
-};
