@@ -44,3 +44,23 @@ export async function getShortenedURLs(req, res) {
     res.status(500).send("Something went wrong on getShortenedURLs route")
   }
 };
+
+export async function deleteURLs(req, res) {
+  const { id } = req.params;
+  try {
+    const result = await connection.query(`
+    SELECT * FROM urls WHERE urls.id=$1;`, [id])
+
+    if (result.rows.length <= 0) {
+      res.sendStatus(404)
+    }
+
+    await connection.query(`
+    DELETE FROM urls WHERE urls.id=$1;`, [id])
+    res.sendStatus(204)
+  }
+
+  catch (error) {
+    res.status(500).send()
+  }
+}
